@@ -39,12 +39,13 @@ body {
   background: rgba(248, 250, 252, 0.94);
   color: #0f172a;
   backdrop-filter: blur(4px);
+  white-space: nowrap;
 }
 
 .container {
   max-width: 1080px;
   margin: 0 auto;
-  padding: max(16px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(20px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
+  padding: max(64px, calc(16px + env(safe-area-inset-top))) max(16px, env(safe-area-inset-right)) max(20px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
 }
 
 .app-view {
@@ -184,7 +185,7 @@ button {
 
 .check {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 10px;
 }
 
@@ -204,7 +205,9 @@ button {
   background: #f1f5f9;
   border-color: #cbd5e1;
   color: #0f172a;
-  white-space: nowrap;
+  white-space: normal;
+  word-break: break-word;
+  line-height: 1.25;
   border-radius: 12px;
   box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
 }
@@ -283,6 +286,7 @@ button:hover {
 
 .table-wrap {
   overflow: auto;
+  -webkit-overflow-scrolling: touch;
   border: 1px solid var(--line);
   border-radius: 10px;
   background: #fff;
@@ -726,6 +730,18 @@ thead th {
 }
 
 @media (max-width: 900px) {
+  .lang-toggle {
+    top: calc(8px + env(safe-area-inset-top));
+    right: calc(8px + env(safe-area-inset-right));
+    min-height: 34px;
+    padding: 5px 10px;
+    font-size: 0.85rem;
+  }
+
+  .container {
+    padding-top: max(60px, calc(14px + env(safe-area-inset-top)));
+  }
+
   .home-actions {
     grid-template-columns: 1fr;
   }
@@ -799,6 +815,8 @@ thead th {
     color: var(--muted);
     margin-bottom: 5px;
     font-weight: 600;
+    white-space: normal;
+    overflow-wrap: anywhere;
   }
 
   .entry-table td input,
