@@ -1,0 +1,19 @@
+[
+  {
+    "name": "Example Electricity Supplier",
+    "url": "https://example.com/pricing",
+    "patterns": [
+      "\\$(\\d+(?:\\.\\d{1,2})?)\\s*(?:/|per\\s+)month",
+      "Daily charge\\s*\\$?(\\d+(?:\\.\\d{1,2})?)"
+    ],
+    "notes": "Use one or more regex patterns that can capture the fee value from raw page HTML."
+  },
+  {
+    "name": "Example Internet Supplier",
+    "url": "https://example.com/broadband-plans",
+    "patterns": [
+      "From\\s+\\$(\\d+(?:\\.\\d{1,2})?)"
+    ],
+    "notes": "Sites rendered fully by JavaScript may not expose final prices to this script."
+  }
+]

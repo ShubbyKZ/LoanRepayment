@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="en-NZ">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0f766e" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <title>NZ Mortgage Affordability Model</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="container">
+      <header class="hero">
+        <div class="hero-top">
+          <h1>NZ Mortgage Affordability Model</h1>
+          <span class="owner-tag">by KZ</span>
+        </div>
+        <p>
+          Estimate take-home pay (NZ tax), mortgage repayments, living costs,
+          and affordability in one place.
+        </p>
+      </header>
+
+      <section class="card section-card section-mortgage" id="mortgageSection">
+        <h2>Mortgage Inputs</h2>
+        <label>
+          House price (NZD)
+          <input id="housePrice" type="number" min="0" step="1000" value="800000" />
+        </label>
+        <label>
+          Deposit (NZD)
+          <input id="deposit" type="number" min="0" step="1000" value="160000" />
+        </label>
+        <p class="hint">Default deposit is 20% of house price (until you manually edit it).</p>
+        <label>
+          Interest rate (% p.a.)
+          <input id="interestRate" type="number" min="0" step="0.01" value="6.5" />
+        </label>
+        <label>
+          Loan term (years)
+          <input id="loanTermYears" type="number" min="1" step="1" value="30" />
+        </label>
+        <label>
+          Repayment frequency
+          <select id="repaymentFrequency">
+            <option value="weekly">Weekly</option>
+            <option value="fortnightly" selected>Fortnightly</option>
+            <option value="monthly">Monthly</option>
+          </select>
+        </label>
+        <label>
+          Christchurch suburb (for rates estimate)
+          <select id="christchurchArea">
+            <option value="central_city" selected>Central City</option>
+            <option value="addington">Addington</option>
+            <option value="akaroa">Akaroa</option>
+            <option value="avondale">Avondale</option>
+            <option value="belfast">Belfast</option>
+            <option value="bryndwr">Bryndwr</option>
+            <option value="burnside">Burnside</option>
+            <option value="cashmere_suburb">Cashmere</option>
+            <option value="fendalton_suburb">Fendalton</option>
+            <option value="halswell_suburb">Halswell</option>
+            <option value="harewood_suburb">Harewood</option>
+            <option value="hei_hei">Hei Hei</option>
+            <option value="hornby_suburb">Hornby</option>
+            <option value="ilam">Ilam</option>
+            <option value="linwood_suburb">Linwood</option>
+            <option value="lyttelton">Lyttelton</option>
+            <option value="merivale">Merivale</option>
+            <option value="new_brighton">New Brighton</option>
+            <option value="northwood">Northwood</option>
+            <option value="papanui_suburb">Papanui</option>
+            <option value="parklands">Parklands</option>
+            <option value="redcliffs">Redcliffs</option>
+            <option value="riccarton_suburb">Riccarton</option>
+            <option value="shirley">Shirley</option>
+            <option value="somerfield">Somerfield</option>
+            <option value="spreydon_suburb">Spreydon</option>
+            <option value="st_albans">St Albans</option>
+            <option value="sydenham">Sydenham</option>
+            <option value="wigram">Wigram</option>
+            <option value="woolston">Woolston</option>
+          </select>
+        </label>
+        <p class="hint">Suburb selection is mapped to Christchurch City Council ward-based rates benchmarks (2022/2025 ward structure).</p>
+        <button type="button" id="confirmMortgage">Confirm Mortgage</button>
+      </section>
+
+      <section class="card section-card section-income" id="incomeSection">
+        <h2>Income (Annual)</h2>
+        <div class="row-between">
+          <h3>Salary Incomes</h3>
+          <button type="button" id="addIncomeRow">Add Person</button>
+        </div>
+        <div class="table-wrap">
+          <table class="entry-table">
+            <thead>
+              <tr>
+                <th>Person</th>
+                <th>Gross Salary (NZD)</th>
+                <th>KiwiSaver %</th>
+                <th>Student Loan</th>
+                <th>After-tax (NZD / year)</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="incomeTableBody"></tbody>
+          </table>
+        </div>
+
+        <h3>Rent Income (Owner)</h3>
+        <label class="check">
+          <input id="includeRentIncome" type="checkbox" />
+          Include rent income
+        </label>
+        <div class="row-wrap">
+          <label class="inline-field">
+            Rent amount (NZD)
+            <input id="rentIncomeAmount" type="number" min="0" step="1" value="0" />
+          </label>
+          <label class="inline-field">
+            Rent frequency
+            <select id="rentIncomeFrequency">
+              <option value="weekly" selected>Weekly</option>
+              <option value="fortnightly">Fortnightly</option>
+              <option value="monthly">Monthly</option>
+              <option value="annual">Annual</option>
+            </select>
+          </label>
+        </div>
+        <p class="hint">Set rent as net usable rent contribution.</p>
+        <button type="button" id="confirmIncome">Confirm Income</button>
+      </section>
+
+      <section class="card section-card section-costs" id="costsSection">
+        <div class="row-between">
+          <h2>Recurring Costs</h2>
+          <button id="addCostRow" type="button">Add Cost</button>
+        </div>
+        <p class="hint">
+          Add all ongoing costs (electricity, council rates, insurance, internet,
+          groceries, transport, etc.) with their billing frequency.
+        </p>
+        <div class="cost-estimator">
+          <h3>NZ Average Cost Estimator</h3>
+          <div class="row-wrap">
+            <label class="inline-field">
+              Number of tenants / occupants
+              <input id="occupantCount" type="number" min="1" step="1" value="2" />
+            </label>
+            <label class="check">
+              <input id="hasGasConnection" type="checkbox" checked />
+              Gas connection at property
+            </label>
+            <label class="check">
+              <input id="autoEstimateCosts" type="checkbox" checked />
+              Auto-update insurance and utilities on confirm
+            </label>
+            <button type="button" id="applyAverageCosts">Apply NZ Averages</button>
+          </div>
+          <p class="hint" id="costEstimatorNote">
+            Insurance estimate uses a house-price ratio benchmark. Electricity and gas estimates scale with occupants.
+          </p>
+        </div>
+        <div class="table-wrap">
+          <table class="entry-table">
+            <thead>
+              <tr>
+                <th>Cost Name</th>
+                <th>Amount (NZD)</th>
+                <th>Frequency</th>
+                <th>Annualized (NZD)</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="costTableBody"></tbody>
+          </table>
+        </div>
+        <button type="button" id="confirmCosts">Confirm Costs</button>
+      </section>
+
+      <section class="card section-card section-results" id="resultsSection">
+        <div class="row-between result-head">
+          <h2>Results</h2>
+          <div class="display-tabs" id="resultDisplayTabs" role="tablist" aria-label="Result display mode">
+            <button type="button" class="display-tab" data-mode="monthly">Monthly</button>
+            <button type="button" class="display-tab is-active" data-mode="fortnightly">Fortnightly</button>
+            <button type="button" class="display-tab" data-mode="weekly">Weekly</button>
+          </div>
+        </div>
+        <div class="row-wrap result-tools">
+          <button type="button" id="toggleDetails">Show Details</button>
+          <button type="button" id="exportPng">Share / Export Image</button>
+        </div>
+        <div class="results" id="results"></div>
+        <div class="sensitivity" id="sensitivityPanel"></div>
+        <p class="note" id="statusNote"></p>
+        <p class="note" id="riskNote"></p>
+        <p class="note" id="validationNote"></p>
+      </section>
+
+      <section class="card small section-card section-assumptions" id="assumptionsSection">
+        <h2>Assumptions</h2>
+        <ul>
+          <li>NZ income tax brackets from 1 April 2025.</li>
+          <li>ACC earners levy set to 1.67% capped at NZD 152,790 earnings.</li>
+          <li>This is a planning tool, not financial advice.</li>
+        </ul>
+      </section>
+
+      <section class="card section-card section-scenarios" id="scenariosSection">
+        <h2>Scenarios</h2>
+        <div class="row-wrap">
+          <label class="inline-field">
+            Saved scenarios (by house price)
+            <select id="scenarioSelect"></select>
+          </label>
+          <button type="button" id="saveScenario">Save Current House Price</button>
+          <button type="button" id="loadScenario">Load</button>
+          <button type="button" id="deleteScenario">Delete</button>
+          <button type="button" id="copyShareLink">Copy Share Link</button>
+        </div>
+        <p class="note" id="scenarioNote"></p>
+      </section>
+
+      <section class="card section-card section-oneoff" id="oneOffSection">
+        <div class="row-between">
+          <h2>One-off Purchase Costs</h2>
+          <button id="addOneOffRow" type="button">Add One-off Cost</button>
+        </div>
+        <div class="row-wrap">
+          <label class="inline-field">
+            Common one-off items
+            <select id="oneOffPreset">
+              <option value="legal">Legal / Conveyancing</option>
+              <option value="valuation">Valuation report</option>
+              <option value="builders">Builder's report</option>
+              <option value="lim">LIM report</option>
+              <option value="moving">Moving costs</option>
+              <option value="loan_setup">Loan setup / bank fees</option>
+              <option value="initial_repairs">Initial repairs / setup</option>
+            </select>
+          </label>
+          <button id="addOneOffPreset" type="button">Add Selected Average</button>
+          <button id="applyOneOffAverages" type="button">Apply Common Averages</button>
+          <button id="shareOneOffSummary" type="button">Share One-off Summary</button>
+        </div>
+        <p class="hint" id="oneOffEstimatorNote">Use these as planning averages; edit any line item if your quotes differ.</p>
+        <p class="hint">
+          Add one-time costs such as legal fee, valuation, LIM report, moving, and setup costs.
+        </p>
+        <div class="table-wrap">
+          <table class="entry-table">
+            <thead>
+              <tr>
+                <th>Cost Name</th>
+                <th>Amount (NZD)</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="oneOffTableBody"></tbody>
+          </table>
+        </div>
+        <div class="cost-estimator">
+          <h3>One-off Awareness (Not in Repayment Calculation)</h3>
+          <p class="hint oneoff-sum" id="oneOffAwarenessTotal">Total one-off costs: NZD 0</p>
+          <p class="hint">
+            These one-off costs are shown for planning awareness only and are not included in loan repayment affordability (income - recurring costs - mortgage).
+          </p>
+        </div>
+        <button type="button" id="confirmOneOff">Confirm One-off Costs</button>
+      </section>
+    </main>
+
+    <div class="modal is-hidden" id="incomeBreakdownModal" role="dialog" aria-modal="true" aria-labelledby="incomeBreakdownTitle">
+      <div class="modal-panel">
+        <div class="row-between">
+          <h3 id="incomeBreakdownTitle">Income Breakdown</h3>
+          <button type="button" id="closeIncomeBreakdown">Close</button>
+        </div>
+        <div class="modal-body" id="incomeBreakdownBody"></div>
+      </div>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
