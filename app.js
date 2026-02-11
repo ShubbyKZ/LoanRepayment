@@ -283,6 +283,9 @@ const I18N = {
     planner_guide_6: "Recurring costs are converted to annual totals by frequency (weekly/fortnightly/monthly/quarterly/annual).",
     planner_guide_7: "Remaining cashflow = Net income - Recurring costs - Mortgage repayment (for selected display period).",
     planner_guide_8: "Sensitivity cards show outcomes at current rate, +0.5%, and +1.0%; one-off costs are tracked separately and excluded from repayment affordability.",
+    planner_guide_9: "NZ income tax brackets used in this tool are from 1 April 2025.",
+    planner_guide_10: "ACC earners levy is set to 1.67% and capped at NZD 152,790 earnings.",
+    planner_guide_11: "This is a planning tool only, not financial advice.",
   },
   zh: {
     app_title: "新西兰房贷可负担性模型",
@@ -454,6 +457,9 @@ const I18N = {
     planner_guide_6: "持续性成本会按频率（周/双周/月/季/年）换算成年总额。",
     planner_guide_7: "结余现金流 = 净收入 - 持续性成本 - 房贷供款（按你选择的显示周期）。",
     planner_guide_8: "敏感性卡片展示当前利率、+0.5%、+1.0% 三档结果；一次性成本单独追踪，不计入供款可负担性。",
+    planner_guide_9: "本工具使用的 NZ 所得税税阶为 2025 年 4 月 1 日版本。",
+    planner_guide_10: "ACC earners levy 设为 1.67%，封顶收入 NZD 152,790。",
+    planner_guide_11: "本工具仅用于规划参考，不构成财务建议。",
   },
 };
 
@@ -639,10 +645,6 @@ function applyStaticTranslations() {
   setNodeText(".display-tab[data-mode='fortnightly']", "fortnightly");
   setNodeText(".display-tab[data-mode='weekly']", "weekly");
   setNodeText("#exportPng", "export_image");
-  setNodeText("#assumptionsSection h2", "assumptions");
-  setNodeText("#assumptionsSection li:nth-child(1)", "assumptions_1");
-  setNodeText("#assumptionsSection li:nth-child(2)", "assumptions_2");
-  setNodeText("#assumptionsSection li:nth-child(3)", "assumptions_3");
   setNodeText("#scenariosSection h2", "scenarios");
   setLabelBeforeControl("scenarioSelect", t("scenarios_select_label"));
   setNodeText("#saveScenario", "save_current_house_price");
@@ -680,6 +682,9 @@ function applyStaticTranslations() {
   setNodeText("#plannerGuide6", "planner_guide_6");
   setNodeText("#plannerGuide7", "planner_guide_7");
   setNodeText("#plannerGuide8", "planner_guide_8");
+  setNodeText("#plannerGuide9", "planner_guide_9");
+  setNodeText("#plannerGuide10", "planner_guide_10");
+  setNodeText("#plannerGuide11", "planner_guide_11");
   setNodeText("#incomeSection thead th:nth-child(1)", "th_person");
   setNodeText("#incomeSection thead th:nth-child(2)", "th_gross_salary");
   setNodeText("#incomeSection thead th:nth-child(3)", "th_kiwisaver");
@@ -798,13 +803,21 @@ function initAppUpdateFlow() {
 
       setInterval(() => {
         registration.update().catch(() => {});
-      }, 60 * 60 * 1000);
+      }, 5 * 60 * 1000);
 
       document.addEventListener("visibilitychange", () => {
         if (document.visibilityState === "visible") {
           registration.update().catch(() => {});
         }
       });
+
+      window.addEventListener("online", () => {
+        registration.update().catch(() => {});
+      });
+
+      setTimeout(() => {
+        registration.update().catch(() => {});
+      }, 2000);
     })
     .catch(() => {});
 
@@ -888,7 +901,6 @@ const SECTION_IDS = [
   "incomeSection",
   "costsSection",
   "resultsSection",
-  "assumptionsSection",
   "scenariosSection",
   "oneOffSection",
 ];
@@ -1998,23 +2010,23 @@ function renderResults(data) {
 
   const detailRows = data.showDetails
     ? `
-      <div class="bs-row bs-sub">
+      <div class="bs-row bs-sub bs-detail">
         <div class="bs-label">${escapeHtml(labels.afterTaxSalary)} (${escapeHtml(displayLabel)})</div>
         <div class="bs-value">${escapeHtml(money(data.salaryNetAnnual / FREQUENCY_PER_YEAR[data.resultDisplayMode]))}</div>
       </div>
-      <div class="bs-row bs-sub">
+      <div class="bs-row bs-sub bs-detail">
         <div class="bs-label">${escapeHtml(labels.rentIncome)} (${escapeHtml(displayLabel)})</div>
         <div class="bs-value">${escapeHtml(money(data.rentAnnual / FREQUENCY_PER_YEAR[data.resultDisplayMode]))}</div>
       </div>
-      <div class="bs-row bs-sub">
+      <div class="bs-row bs-sub bs-detail">
         <div class="bs-label">${escapeHtml(labels.livingCosts)} (${escapeHtml(displayLabel)})</div>
         <div class="bs-value">${escapeHtml(money(data.displayCosts))}</div>
       </div>
-      <div class="bs-row bs-sub">
+      <div class="bs-row bs-sub bs-detail">
         <div class="bs-label">${escapeHtml(labels.mortgageRepayment)} (${escapeHtml(displayLabel)})</div>
         <div class="bs-value">${escapeHtml(money(data.displayMortgage))}</div>
       </div>
-      <div class="bs-row bs-divider">
+      <div class="bs-row bs-divider bs-detail">
         <div class="bs-label">${escapeHtml(labels.deposit)}</div>
         <div class="bs-value">${escapeHtml(money(data.deposit))}</div>
       </div>
@@ -2024,15 +2036,15 @@ function renderResults(data) {
   resultsNode.innerHTML = `
     <div class="balance-sheet">
       <div class="bs-header">${escapeHtml(displayLabel)} ${escapeHtml(labels.balanceSheet)}</div>
-      <div class="bs-row">
+      <div class="bs-row bs-income">
         <div class="bs-label">${escapeHtml(labels.totalIncome)}</div>
         <div class="bs-value">${escapeHtml(money(totalIncome))}</div>
       </div>
-      <div class="bs-row bs-divider">
+      <div class="bs-row bs-divider bs-expense">
         <div class="bs-label">${escapeHtml(labels.totalExpenses)}</div>
         <div class="bs-value">${escapeHtml(money(totalExpenses))}</div>
       </div>
-      <div class="bs-row bs-total">
+      <div class="bs-row bs-total bs-remaining">
         <div class="bs-label">${escapeHtml(labels.remaining)}</div>
         <div class="bs-value">${escapeHtml(money(remaining))}</div>
       </div>
