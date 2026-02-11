@@ -116,7 +116,6 @@ const I18N = {
     home_notes_2:
       "You can save by house price, load previous scenarios, share snapshots, and separately track one-off purchase costs.",
     go_calculator: "Go to Calculator",
-    start_new_scenario: "Start New Scenario",
     go_all_scenarios: "Go to All Scenarios",
     oneoff_calculator: "One-off Cost Calculator",
     back_home: "Back to Home",
@@ -277,7 +276,6 @@ const I18N = {
     home_notes_1: "这个工具会结合新西兰工资税、房贷供款、持续性开支与情景快照来估算可负担性。",
     home_notes_2: "你可以按房价保存情景、加载历史情景、分享快照，并单独追踪一次性购房成本。",
     go_calculator: "进入计算页",
-    start_new_scenario: "新建 Scenario",
     go_all_scenarios: "查看所有 Scenario",
     oneoff_calculator: "一次性成本计算器",
     back_home: "返回首页",
@@ -500,7 +498,6 @@ const updateLaterBtn = document.getElementById("updateLaterBtn");
 const languageToggleBtn = document.getElementById("languageToggle");
 const appViews = [...document.querySelectorAll(".app-view")];
 const homeGoPlannerBtn = document.getElementById("homeGoPlanner");
-const homeGoNewScenarioBtn = document.getElementById("homeGoNewScenario");
 const homeGoScenariosBtn = document.getElementById("homeGoScenarios");
 const homeGoOneOffBtn = document.getElementById("homeGoOneOff");
 const viewNavButtons = [...document.querySelectorAll("[data-nav-target]")];
@@ -567,7 +564,6 @@ function applyStaticTranslations() {
   setNodeText("#homeNotesLine1", "home_notes_1");
   setNodeText("#homeNotesLine2", "home_notes_2");
   setNodeText("#homeGoPlanner", "go_calculator");
-  setNodeText("#homeGoNewScenario", "start_new_scenario");
   setNodeText("#homeGoScenarios", "go_all_scenarios");
   setNodeText("#homeGoOneOff", "oneoff_calculator");
   setAllNodeText("button[data-nav-target='home']", "back_home");
@@ -786,7 +782,9 @@ function navigateToView(view, options = {}) {
   const targetView = Object.prototype.hasOwnProperty.call(VIEW_IDS, view) ? view : "home";
 
   for (const node of appViews) {
-    node.classList.toggle("is-active", node.dataset.view === targetView);
+    const isActive = node.dataset.view === targetView;
+    node.classList.toggle("is-active", isActive);
+    node.hidden = !isActive;
   }
 
   if (updateHash) {
@@ -800,10 +798,6 @@ function initViewNavigation() {
   homeGoPlannerBtn.addEventListener("click", () => navigateToView("planner"));
   homeGoScenariosBtn.addEventListener("click", () => navigateToView("scenarios"));
   homeGoOneOffBtn.addEventListener("click", () => navigateToView("oneoff"));
-  homeGoNewScenarioBtn.addEventListener("click", () => {
-    startNewScenario();
-    navigateToView("planner");
-  });
 
   for (const btn of viewNavButtons) {
     btn.addEventListener("click", () => {

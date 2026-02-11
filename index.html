@@ -39,13 +39,12 @@
 
         <section class="card home-actions">
           <button type="button" id="homeGoPlanner">Go to Calculator</button>
-          <button type="button" id="homeGoNewScenario">Start New Scenario</button>
           <button type="button" id="homeGoScenarios">Go to All Scenarios</button>
           <button type="button" id="homeGoOneOff">One-off Cost Calculator</button>
         </section>
       </section>
 
-      <section class="app-view" id="viewPlanner" data-view="planner">
+      <section class="app-view" id="viewPlanner" data-view="planner" hidden>
         <section class="card view-nav">
           <button type="button" data-nav-target="home">Back to Home</button>
           <button type="button" data-nav-target="scenarios">All Scenarios</button>
@@ -241,7 +240,7 @@
         </section>
       </section>
 
-      <section class="app-view" id="viewScenarios" data-view="scenarios">
+      <section class="app-view" id="viewScenarios" data-view="scenarios" hidden>
         <section class="card view-nav">
           <button type="button" data-nav-target="home">Back to Home</button>
           <button type="button" data-nav-target="planner">Go to Calculator</button>
@@ -262,7 +261,7 @@
         </section>
       </section>
 
-      <section class="app-view" id="viewOneOff" data-view="oneoff">
+      <section class="app-view" id="viewOneOff" data-view="oneoff" hidden>
         <section class="card view-nav">
           <button type="button" data-nav-target="home">Back to Home</button>
           <button type="button" data-nav-target="planner">Go to Calculator</button>
