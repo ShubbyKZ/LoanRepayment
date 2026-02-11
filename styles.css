@@ -45,7 +45,7 @@ body {
 .container {
   max-width: none;
   margin: 0 auto;
-  padding: max(64px, calc(16px + env(safe-area-inset-top))) max(16px, env(safe-area-inset-right)) max(20px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
+  padding: max(64px, calc(16px + env(safe-area-inset-top))) max(16px, env(safe-area-inset-right)) calc(84px + env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
   width: 100%;
 }
 
@@ -58,21 +58,36 @@ body {
   display: grid;
 }
 
-.home-actions {
+.home-actions { display: none; }
+.view-nav { display: none; }
+
+.bottom-tabs {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1250;
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 12px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  padding: 8px max(12px, env(safe-area-inset-right)) calc(8px + env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
+  background: rgba(248, 250, 252, 0.94);
+  border-top: 1px solid #cbd5e1;
+  backdrop-filter: blur(10px);
 }
 
-.home-actions button {
+.bottom-tab {
   width: 100%;
-  min-height: 48px;
+  min-height: 42px;
+  margin: 0;
+  border-radius: 12px;
+  touch-action: manipulation;
 }
 
-.view-nav {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
+.bottom-tab.is-active {
+  background: #0f766e;
+  border-color: #0f766e;
+  color: #f0fdfa;
 }
 
 .hero {
@@ -741,10 +756,19 @@ thead th {
 
   .container {
     padding-top: max(60px, calc(14px + env(safe-area-inset-top)));
+    padding-bottom: calc(90px + env(safe-area-inset-bottom));
   }
 
-  .view-nav button {
-    width: 100%;
+  .bottom-tabs {
+    gap: 6px;
+    padding-left: max(8px, env(safe-area-inset-left));
+    padding-right: max(8px, env(safe-area-inset-right));
+  }
+
+  .bottom-tab {
+    min-height: 40px;
+    font-size: 0.84rem;
+    padding: 8px 6px;
   }
 
   .hero-top {

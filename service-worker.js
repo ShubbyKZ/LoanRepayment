@@ -1,4 +1,4 @@
-const CACHE_VERSION = "mortgage-model-v1.0.0";
+const CACHE_VERSION = "mortgage-model-v1.1.0";
 const APP_SHELL = [
   "/",
   "/index.html",
@@ -38,6 +38,10 @@ self.addEventListener("fetch", (event) => {
 
   // Always try network first for HTML so deployments show up quickly.
   const acceptsHtml = request.headers.get("accept")?.includes("text/html");
+  const isAppShellAsset =
+    url.pathname.endsWith(".js") ||
+    url.pathname.endsWith(".css") ||
+    url.pathname.endsWith(".webmanifest");
   if (request.mode === "navigate" || acceptsHtml) {
     event.respondWith(
       fetch(request)
@@ -47,6 +51,20 @@ self.addEventListener("fetch", (event) => {
           return response;
         })
         .catch(() => caches.match(request).then((cached) => cached || caches.match("/index.html"))),
+    );
+    return;
+  }
+
+  // Network-first for app shell assets to avoid HTML/JS version mismatch.
+  if (isAppShellAsset) {
+    event.respondWith(
+      fetch(request)
+        .then((response) => {
+          const copy = response.clone();
+          caches.open(CACHE_VERSION).then((cache) => cache.put(request, copy));
+          return response;
+        })
+        .catch(() => caches.match(request)),
     );
     return;
   }

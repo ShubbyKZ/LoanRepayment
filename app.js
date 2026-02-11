@@ -267,6 +267,9 @@ const I18N = {
     cost_transport: "Transport",
     cost_natural_gas: "Natural Gas",
     person_default: "Person 1",
+    tab_planner: "Calculator",
+    tab_scenarios: "Scenarios",
+    tab_oneoff: "One-off",
   },
   zh: {
     app_title: "新西兰房贷可负担性模型",
@@ -422,6 +425,9 @@ const I18N = {
     cost_transport: "交通",
     cost_natural_gas: "天然气",
     person_default: "成员 1",
+    tab_planner: "计算",
+    tab_scenarios: "情景",
+    tab_oneoff: "一次性",
   },
 };
 
@@ -501,6 +507,7 @@ const homeGoPlannerBtn = document.getElementById("homeGoPlanner");
 const homeGoScenariosBtn = document.getElementById("homeGoScenarios");
 const homeGoOneOffBtn = document.getElementById("homeGoOneOff");
 const viewNavButtons = [...document.querySelectorAll("[data-nav-target]")];
+const bottomTabButtons = [...document.querySelectorAll(".bottom-tab")];
 
 const VIEW_IDS = {
   home: "viewHome",
@@ -629,6 +636,9 @@ function applyStaticTranslations() {
   setNodeText("#appUpdateText", "app_update_available");
   setNodeText("#updateNowBtn", "update_now");
   setNodeText("#updateLaterBtn", "later");
+  setNodeText(".bottom-tab[data-tab='planner']", "tab_planner");
+  setNodeText(".bottom-tab[data-tab='scenarios']", "tab_scenarios");
+  setNodeText(".bottom-tab[data-tab='oneoff']", "tab_oneoff");
   setNodeText("#incomeSection thead th:nth-child(1)", "th_person");
   setNodeText("#incomeSection thead th:nth-child(2)", "th_gross_salary");
   setNodeText("#incomeSection thead th:nth-child(3)", "th_kiwisaver");
@@ -774,7 +784,8 @@ function initAppUpdateFlow() {
 
 function viewFromHash() {
   const hash = window.location.hash.replace(/^#/, "").trim().toLowerCase();
-  return Object.prototype.hasOwnProperty.call(VIEW_IDS, hash) ? hash : "home";
+  if (hash === "home") return "planner";
+  return Object.prototype.hasOwnProperty.call(VIEW_IDS, hash) ? hash : "planner";
 }
 
 function navigateToView(view, options = {}) {
@@ -787,6 +798,10 @@ function navigateToView(view, options = {}) {
     node.hidden = !isActive;
   }
 
+  for (const tab of bottomTabButtons) {
+    tab.classList.toggle("is-active", tab.dataset.tab === targetView);
+  }
+
   if (updateHash) {
     const hash = targetView === "home" ? "" : `#${targetView}`;
     const nextUrl = `${window.location.pathname}${window.location.search}${hash}`;
@@ -795,9 +810,9 @@ function navigateToView(view, options = {}) {
 }
 
 function initViewNavigation() {
-  homeGoPlannerBtn.addEventListener("click", () => navigateToView("planner"));
-  homeGoScenariosBtn.addEventListener("click", () => navigateToView("scenarios"));
-  homeGoOneOffBtn.addEventListener("click", () => navigateToView("oneoff"));
+  if (homeGoPlannerBtn) homeGoPlannerBtn.addEventListener("click", () => navigateToView("planner"));
+  if (homeGoScenariosBtn) homeGoScenariosBtn.addEventListener("click", () => navigateToView("scenarios"));
+  if (homeGoOneOffBtn) homeGoOneOffBtn.addEventListener("click", () => navigateToView("oneoff"));
 
   for (const btn of viewNavButtons) {
     btn.addEventListener("click", () => {

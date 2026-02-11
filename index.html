@@ -37,20 +37,9 @@
           </p>
         </section>
 
-        <section class="card home-actions">
-          <button type="button" id="homeGoPlanner">Go to Calculator</button>
-          <button type="button" id="homeGoScenarios">Go to All Scenarios</button>
-          <button type="button" id="homeGoOneOff">One-off Cost Calculator</button>
-        </section>
       </section>
 
       <section class="app-view" id="viewPlanner" data-view="planner" hidden>
-        <section class="card view-nav">
-          <button type="button" data-nav-target="home">Back to Home</button>
-          <button type="button" data-nav-target="scenarios">All Scenarios</button>
-          <button type="button" data-nav-target="oneoff">One-off Calculator</button>
-        </section>
-
         <section class="card section-card section-mortgage" id="mortgageSection">
           <h2>Mortgage Inputs</h2>
           <label>
@@ -241,10 +230,6 @@
       </section>
 
       <section class="app-view" id="viewScenarios" data-view="scenarios" hidden>
-        <section class="card view-nav">
-          <button type="button" data-nav-target="home">Back to Home</button>
-          <button type="button" data-nav-target="planner">Go to Calculator</button>
-        </section>
         <section class="card section-card section-scenarios" id="scenariosSection">
           <h2>Scenarios</h2>
           <div class="row-wrap">
@@ -262,10 +247,6 @@
       </section>
 
       <section class="app-view" id="viewOneOff" data-view="oneoff" hidden>
-        <section class="card view-nav">
-          <button type="button" data-nav-target="home">Back to Home</button>
-          <button type="button" data-nav-target="planner">Go to Calculator</button>
-        </section>
         <section class="card section-card section-oneoff" id="oneOffSection">
           <div class="row-between">
             <h2>One-off Purchase Costs</h2>
@@ -315,6 +296,12 @@
         </section>
       </section>
     </main>
+
+    <nav class="bottom-tabs" id="bottomTabs" aria-label="Primary navigation">
+      <button type="button" class="bottom-tab" data-nav-target="planner" data-tab="planner">Calculator</button>
+      <button type="button" class="bottom-tab" data-nav-target="scenarios" data-tab="scenarios">Scenarios</button>
+      <button type="button" class="bottom-tab" data-nav-target="oneoff" data-tab="oneoff">One-off</button>
+    </nav>
 
     <div class="modal is-hidden" id="incomeBreakdownModal" role="dialog" aria-modal="true" aria-labelledby="incomeBreakdownTitle">
       <div class="modal-panel">
