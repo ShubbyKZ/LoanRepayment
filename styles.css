@@ -327,6 +327,43 @@ thead th {
   display: inline;
 }
 
+.oneoff-confirm-btn {
+  background: #dcfce7;
+  border-color: #86efac;
+  color: #166534;
+}
+
+.oneoff-confirm-btn:hover {
+  background: #bbf7d0;
+}
+
+.oneoff-confirm-btn.is-edit {
+  background: #fef3c7;
+  border-color: #fcd34d;
+  color: #92400e;
+}
+
+.oneoff-confirm-btn.is-edit:hover {
+  background: #fde68a;
+}
+
+.entry-table .oneoff-row.is-oneoff-collapsed td:not(:first-child) {
+  display: none;
+}
+
+.entry-table .oneoff-row.is-oneoff-collapsed td:first-child {
+  border-bottom: 0;
+  cursor: pointer;
+}
+
+.entry-table .oneoff-row.is-oneoff-collapsed .oneoff-name {
+  display: none;
+}
+
+.entry-table .oneoff-row.is-oneoff-collapsed .cost-name-static {
+  display: inline;
+}
+
 .table-actions button {
   width: auto;
   padding: 6px 10px;

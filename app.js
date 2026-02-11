@@ -561,15 +561,40 @@ function calculateIncomeBreakdown(gross, kiwiSaverRate, hasStudentLoan) {
 
 function addOneOffRow(name, amount) {
   const tr = document.createElement("tr");
+  tr.className = "oneoff-row";
   tr.innerHTML = `
-    <td data-label="Cost Name"><input type="text" class="oneoff-name" value="${escapeHtml(name)}" /></td>
+    <td data-label="Cost Name" class="oneoff-name-cell">
+      <div class="cost-name-wrap">
+        <span class="cost-name-static">${escapeHtml(name || "Unnamed one-off")}</span>
+        <input type="text" class="oneoff-name" value="${escapeHtml(name)}" />
+      </div>
+    </td>
     <td data-label="Amount (NZD)"><input type="number" class="oneoff-amount" min="0" step="0.01" value="${amount}" /></td>
-    <td data-label="Actions"><button type="button" class="remove-oneoff-row">Remove</button></td>
+    <td data-label="Actions" class="table-actions">
+      <button type="button" class="oneoff-confirm-btn">Confirm</button>
+      <button type="button" class="remove-oneoff-row">Remove</button>
+    </td>
   `;
 
   tr.querySelector(".remove-oneoff-row").addEventListener("click", () => {
     tr.remove();
     scheduleDraftSave();
+  });
+
+  tr.querySelector(".oneoff-name").addEventListener("input", () => {
+    syncOneOffRowName(tr);
+    scheduleDraftSave();
+  });
+
+  tr.querySelector(".oneoff-confirm-btn").addEventListener("click", () => {
+    const collapsed = !tr.classList.contains("is-oneoff-collapsed");
+    setOneOffRowCollapsed(tr, collapsed);
+    scheduleDraftSave();
+  });
+
+  tr.querySelector(".oneoff-name-cell").addEventListener("click", () => {
+    if (!tr.classList.contains("is-oneoff-collapsed")) return;
+    setOneOffRowCollapsed(tr, false);
   });
 
   oneOffTableBody.appendChild(tr);
@@ -583,6 +608,20 @@ function syncCostRowName(row) {
 function setCostRowCollapsed(row, collapsed) {
   row.classList.toggle("is-cost-collapsed", collapsed);
   const btn = row.querySelector(".cost-confirm-btn");
+  if (btn) {
+    btn.textContent = collapsed ? "Edit" : "Confirm";
+    btn.classList.toggle("is-edit", collapsed);
+  }
+}
+
+function syncOneOffRowName(row) {
+  const name = (row.querySelector(".oneoff-name").value || "").trim();
+  row.querySelector(".cost-name-static").textContent = name || "Unnamed one-off";
+}
+
+function setOneOffRowCollapsed(row, collapsed) {
+  row.classList.toggle("is-oneoff-collapsed", collapsed);
+  const btn = row.querySelector(".oneoff-confirm-btn");
   if (btn) {
     btn.textContent = collapsed ? "Edit" : "Confirm";
     btn.classList.toggle("is-edit", collapsed);
