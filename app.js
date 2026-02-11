@@ -135,6 +135,9 @@ const incomeBreakdownBody = document.getElementById("incomeBreakdownBody");
 const closeIncomeBreakdownBtn = document.getElementById("closeIncomeBreakdown");
 const oneOffPresetSelect = document.getElementById("oneOffPreset");
 const shareOneOffSummaryBtn = document.getElementById("shareOneOffSummary");
+const appUpdateBanner = document.getElementById("appUpdateBanner");
+const updateNowBtn = document.getElementById("updateNowBtn");
+const updateLaterBtn = document.getElementById("updateLaterBtn");
 
 let resultDisplayMode = "fortnightly";
 let showDetails = false;
@@ -148,6 +151,79 @@ function triggerHaptic(duration = 12) {
   navigator.vibrate(duration);
 }
 
+function initAppUpdateFlow() {
+  if (!("serviceWorker" in navigator)) return;
+
+  let waitingWorker = null;
+
+  const showUpdateBanner = () => {
+    if (!appUpdateBanner) return;
+    appUpdateBanner.classList.remove("is-hidden");
+  };
+
+  const hideUpdateBanner = () => {
+    if (!appUpdateBanner) return;
+    appUpdateBanner.classList.add("is-hidden");
+  };
+
+  const setWaitingWorker = (registration) => {
+    if (!registration || !registration.waiting) return;
+    waitingWorker = registration.waiting;
+    showUpdateBanner();
+  };
+
+  const activateUpdate = () => {
+    if (!waitingWorker) return;
+    waitingWorker.postMessage("SKIP_WAITING");
+  };
+
+  navigator.serviceWorker.addEventListener("controllerchange", () => {
+    window.location.reload();
+  });
+
+  navigator.serviceWorker
+    .register("/service-worker.js")
+    .then((registration) => {
+      setWaitingWorker(registration);
+
+      registration.addEventListener("updatefound", () => {
+        const installing = registration.installing;
+        if (!installing) return;
+
+        installing.addEventListener("statechange", () => {
+          if (installing.state === "installed" && navigator.serviceWorker.controller) {
+            setWaitingWorker(registration);
+          }
+        });
+      });
+
+      setInterval(() => {
+        registration.update().catch(() => {});
+      }, 60 * 60 * 1000);
+
+      document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === "visible") {
+          registration.update().catch(() => {});
+        }
+      });
+    })
+    .catch(() => {});
+
+  if (updateNowBtn) {
+    updateNowBtn.addEventListener("click", () => {
+      triggerHaptic(15);
+      activateUpdate();
+    });
+  }
+
+  if (updateLaterBtn) {
+    updateLaterBtn.addEventListener("click", () => {
+      triggerHaptic(8);
+      hideUpdateBanner();
+    });
+  }
+}
+
 const SECTION_IDS = [
   "mortgageSection",
   "incomeSection",
@@ -159,6 +235,7 @@ const SECTION_IDS = [
 ];
 
 initSectionCollapsing();
+initAppUpdateFlow();
 
 for (const tab of resultDisplayTabs) {
   tab.addEventListener("click", () => {

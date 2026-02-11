@@ -1,0 +1,17 @@
+{
+  "name": "NZ Mortgage Affordability Model",
+  "short_name": "Mortgage NZ",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f7f4ed",
+  "theme_color": "#0f766e",
+  "description": "Mortgage affordability planner for NZ salaries, repayments, and ongoing costs.",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -7,6 +7,8 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <meta name="mobile-web-app-capable" content="yes" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="icon.svg" />
     <title>NZ Mortgage Affordability Model</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
@@ -282,6 +284,14 @@
           <button type="button" id="closeIncomeBreakdown">Close</button>
         </div>
         <div class="modal-body" id="incomeBreakdownBody"></div>
+      </div>
+    </div>
+
+    <div class="app-update is-hidden" id="appUpdateBanner" role="status" aria-live="polite">
+      <span>A new version is available.</span>
+      <div class="app-update-actions">
+        <button type="button" id="updateNowBtn">Update now</button>
+        <button type="button" id="updateLaterBtn">Later</button>
       </div>
     </div>
 
