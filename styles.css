@@ -651,6 +651,17 @@ thead th {
   padding-left: 18px;
 }
 
+.guide-list {
+  margin: 8px 0 0;
+  padding-left: 20px;
+}
+
+.guide-list li {
+  margin: 6px 0;
+  color: #334155;
+  line-height: 1.45;
+}
+
 .modal {
   position: fixed;
   inset: 0;

@@ -274,6 +274,15 @@ const I18N = {
     calculate: "Calculate",
     save_this_scenario: "Save This Scenario",
     scenario_saved_opened: "Saved scenario: {name}. Opened Scenarios page for sharing.",
+    planner_guide_title: "How To Use + Calculation Notes",
+    planner_guide_1: "Your draft inputs are auto-saved in this browser's local storage.",
+    planner_guide_2: "Saved scenarios are stored in local storage on this device/browser and can be loaded from Scenarios.",
+    planner_guide_3: "Share link embeds a snapshot of current inputs into the URL; opening that link restores the same snapshot.",
+    planner_guide_4: "After-tax salary uses NZ progressive tax brackets + ACC levy + optional student loan + KiwiSaver deduction.",
+    planner_guide_5: "Mortgage repayment uses the standard amortization formula from principal, annual rate, and loan term.",
+    planner_guide_6: "Recurring costs are converted to annual totals by frequency (weekly/fortnightly/monthly/quarterly/annual).",
+    planner_guide_7: "Remaining cashflow = Net income - Recurring costs - Mortgage repayment (for selected display period).",
+    planner_guide_8: "Sensitivity cards show outcomes at current rate, +0.5%, and +1.0%; one-off costs are tracked separately and excluded from repayment affordability.",
   },
   zh: {
     app_title: "新西兰房贷可负担性模型",
@@ -436,6 +445,15 @@ const I18N = {
     calculate: "计算",
     save_this_scenario: "保存这个 Scenario",
     scenario_saved_opened: "已保存 Scenario：{name}。已打开 Scenarios 页面可直接分享。",
+    planner_guide_title: "使用说明 + 计算逻辑",
+    planner_guide_1: "你的输入草稿会自动保存在当前浏览器的本地存储（local storage）。",
+    planner_guide_2: "已保存的 Scenario 存在当前设备/浏览器的本地存储中，可在 Scenarios 页面加载。",
+    planner_guide_3: "分享链接会把当前输入快照写入 URL，打开链接即可恢复同一份快照。",
+    planner_guide_4: "税后工资计算基于 NZ 累进税率 + ACC levy + 可选学生贷款 + KiwiSaver 扣除。",
+    planner_guide_5: "房贷供款使用标准等额本息（amortization）公式，由本金、年利率和年限计算。",
+    planner_guide_6: "持续性成本会按频率（周/双周/月/季/年）换算成年总额。",
+    planner_guide_7: "结余现金流 = 净收入 - 持续性成本 - 房贷供款（按你选择的显示周期）。",
+    planner_guide_8: "敏感性卡片展示当前利率、+0.5%、+1.0% 三档结果；一次性成本单独追踪，不计入供款可负担性。",
   },
 };
 
@@ -653,6 +671,15 @@ function applyStaticTranslations() {
   setNodeText(".bottom-tab[data-tab='oneoff']", "tab_oneoff");
   setNodeText("#calculateNow", "calculate");
   setNodeText("#resultSaveScenario", "save_this_scenario");
+  setNodeText("#plannerGuideTitle", "planner_guide_title");
+  setNodeText("#plannerGuide1", "planner_guide_1");
+  setNodeText("#plannerGuide2", "planner_guide_2");
+  setNodeText("#plannerGuide3", "planner_guide_3");
+  setNodeText("#plannerGuide4", "planner_guide_4");
+  setNodeText("#plannerGuide5", "planner_guide_5");
+  setNodeText("#plannerGuide6", "planner_guide_6");
+  setNodeText("#plannerGuide7", "planner_guide_7");
+  setNodeText("#plannerGuide8", "planner_guide_8");
   setNodeText("#incomeSection thead th:nth-child(1)", "th_person");
   setNodeText("#incomeSection thead th:nth-child(2)", "th_gross_salary");
   setNodeText("#incomeSection thead th:nth-child(3)", "th_kiwisaver");
