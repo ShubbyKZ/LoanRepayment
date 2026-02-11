@@ -70,7 +70,7 @@ body {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 8px;
-  padding: 8px max(12px, env(safe-area-inset-right)) calc(8px + env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
+  padding: 8px max(12px, env(safe-area-inset-right)) max(10px, calc(8px + env(safe-area-inset-bottom))) max(12px, env(safe-area-inset-left));
   background: rgba(248, 250, 252, 0.94);
   border-top: 1px solid #cbd5e1;
   backdrop-filter: blur(10px);
@@ -78,10 +78,42 @@ body {
 
 .bottom-tab {
   width: 100%;
-  min-height: 42px;
+  min-height: 52px;
   margin: 0;
   border-radius: 12px;
   touch-action: manipulation;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  line-height: 1.15;
+  white-space: normal;
+  padding: 6px 4px;
+  gap: 3px;
+}
+
+.tab-icon {
+  width: 18px;
+  height: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tab-icon svg {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+}
+
+.tab-label {
+  font-size: 0.73rem;
+  line-height: 1.05;
 }
 
 #calculateNow {
@@ -817,9 +849,12 @@ thead th {
   }
 
   .bottom-tab {
-    min-height: 40px;
-    font-size: 0.84rem;
-    padding: 8px 6px;
+    min-height: 54px;
+    padding: 6px 3px;
+  }
+
+  .tab-label {
+    font-size: 0.7rem;
   }
 
   .hero-top {

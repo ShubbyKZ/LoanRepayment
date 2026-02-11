@@ -667,10 +667,10 @@ function applyStaticTranslations() {
   setNodeText("#appUpdateText", "app_update_available");
   setNodeText("#updateNowBtn", "update_now");
   setNodeText("#updateLaterBtn", "later");
-  setNodeText(".bottom-tab[data-tab='planner']", "tab_planner");
-  setNodeText(".bottom-tab[data-tab='results']", "tab_results");
-  setNodeText(".bottom-tab[data-tab='scenarios']", "tab_scenarios");
-  setNodeText(".bottom-tab[data-tab='oneoff']", "tab_oneoff");
+  setNodeText(".bottom-tab[data-tab='planner'] .tab-label", "tab_planner");
+  setNodeText(".bottom-tab[data-tab='results'] .tab-label", "tab_results");
+  setNodeText(".bottom-tab[data-tab='scenarios'] .tab-label", "tab_scenarios");
+  setNodeText(".bottom-tab[data-tab='oneoff'] .tab-label", "tab_oneoff");
   setNodeText("#calculateNow", "calculate");
   setNodeText("#resultSaveScenario", "save_this_scenario");
   setNodeText("#plannerGuideTitle", "planner_guide_title");
@@ -900,9 +900,6 @@ const SECTION_IDS = [
   "mortgageSection",
   "incomeSection",
   "costsSection",
-  "resultsSection",
-  "scenariosSection",
-  "oneOffSection",
 ];
 
 initSectionCollapsing();
@@ -1009,7 +1006,6 @@ confirmOneOffBtn.addEventListener("click", confirmSectionState);
 confirmIncomeBtn.addEventListener("click", () => collapseSection("incomeSection", true));
 confirmMortgageBtn.addEventListener("click", () => collapseSection("mortgageSection", true));
 confirmCostsBtn.addEventListener("click", () => collapseSection("costsSection", true));
-confirmOneOffBtn.addEventListener("click", () => collapseSection("oneOffSection", true));
 
 saveScenarioBtn.addEventListener("click", () => {
   const name = saveCurrentScenario();
@@ -1984,6 +1980,11 @@ function renderResults(data) {
   const totalIncome = data.displayNetIncome;
   const totalExpenses = data.displayCosts + data.displayMortgage;
   const remaining = totalIncome - totalExpenses;
+  const signedMoney = (value, mode = "auto") => {
+    const normalized = Number(value) || 0;
+    const sign = mode === "plus" ? "+" : mode === "minus" ? "-" : normalized >= 0 ? "+" : "-";
+    return `${sign}${money(Math.abs(normalized))}`;
+  };
   const labels = locale === "zh"
     ? {
         afterTaxSalary: "税后工资合计",
@@ -2012,23 +2013,23 @@ function renderResults(data) {
     ? `
       <div class="bs-row bs-sub bs-detail">
         <div class="bs-label">${escapeHtml(labels.afterTaxSalary)} (${escapeHtml(displayLabel)})</div>
-        <div class="bs-value">${escapeHtml(money(data.salaryNetAnnual / FREQUENCY_PER_YEAR[data.resultDisplayMode]))}</div>
+        <div class="bs-value">${escapeHtml(signedMoney(data.salaryNetAnnual / FREQUENCY_PER_YEAR[data.resultDisplayMode], "plus"))}</div>
       </div>
       <div class="bs-row bs-sub bs-detail">
         <div class="bs-label">${escapeHtml(labels.rentIncome)} (${escapeHtml(displayLabel)})</div>
-        <div class="bs-value">${escapeHtml(money(data.rentAnnual / FREQUENCY_PER_YEAR[data.resultDisplayMode]))}</div>
+        <div class="bs-value">${escapeHtml(signedMoney(data.rentAnnual / FREQUENCY_PER_YEAR[data.resultDisplayMode], "plus"))}</div>
       </div>
       <div class="bs-row bs-sub bs-detail">
         <div class="bs-label">${escapeHtml(labels.livingCosts)} (${escapeHtml(displayLabel)})</div>
-        <div class="bs-value">${escapeHtml(money(data.displayCosts))}</div>
+        <div class="bs-value">${escapeHtml(signedMoney(data.displayCosts, "minus"))}</div>
       </div>
       <div class="bs-row bs-sub bs-detail">
         <div class="bs-label">${escapeHtml(labels.mortgageRepayment)} (${escapeHtml(displayLabel)})</div>
-        <div class="bs-value">${escapeHtml(money(data.displayMortgage))}</div>
+        <div class="bs-value">${escapeHtml(signedMoney(data.displayMortgage, "minus"))}</div>
       </div>
       <div class="bs-row bs-divider bs-detail">
         <div class="bs-label">${escapeHtml(labels.deposit)}</div>
-        <div class="bs-value">${escapeHtml(money(data.deposit))}</div>
+        <div class="bs-value">${escapeHtml(signedMoney(data.deposit, "minus"))}</div>
       </div>
     `
     : "";
@@ -2038,15 +2039,15 @@ function renderResults(data) {
       <div class="bs-header">${escapeHtml(displayLabel)} ${escapeHtml(labels.balanceSheet)}</div>
       <div class="bs-row bs-income">
         <div class="bs-label">${escapeHtml(labels.totalIncome)}</div>
-        <div class="bs-value">${escapeHtml(money(totalIncome))}</div>
+        <div class="bs-value">${escapeHtml(signedMoney(totalIncome, "plus"))}</div>
       </div>
       <div class="bs-row bs-divider bs-expense">
         <div class="bs-label">${escapeHtml(labels.totalExpenses)}</div>
-        <div class="bs-value">${escapeHtml(money(totalExpenses))}</div>
+        <div class="bs-value">${escapeHtml(signedMoney(totalExpenses, "minus"))}</div>
       </div>
       <div class="bs-row bs-total bs-remaining">
         <div class="bs-label">${escapeHtml(labels.remaining)}</div>
-        <div class="bs-value">${escapeHtml(money(remaining))}</div>
+        <div class="bs-value">${escapeHtml(signedMoney(remaining, "auto"))}</div>
       </div>
       ${detailRows}
     </div>
