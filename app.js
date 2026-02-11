@@ -143,6 +143,11 @@ let lastRenderPayload = null;
 let draftSaveTimer = null;
 let depositTouched = false;
 
+function triggerHaptic(duration = 12) {
+  if (typeof navigator === "undefined" || typeof navigator.vibrate !== "function") return;
+  navigator.vibrate(duration);
+}
+
 const SECTION_IDS = [
   "mortgageSection",
   "incomeSection",
@@ -439,12 +444,14 @@ function addCostRow(name, amount, frequency) {
   tr.querySelector(".cost-confirm-btn").addEventListener("click", () => {
     const collapsed = !tr.classList.contains("is-cost-collapsed");
     setCostRowCollapsed(tr, collapsed);
+    triggerHaptic(collapsed ? 14 : 10);
     scheduleDraftSave();
   });
 
   tr.querySelector(".cost-name-cell").addEventListener("click", () => {
     if (!tr.classList.contains("is-cost-collapsed")) return;
     setCostRowCollapsed(tr, false);
+    triggerHaptic(8);
   });
 
   costTableBody.appendChild(tr);
@@ -589,12 +596,14 @@ function addOneOffRow(name, amount) {
   tr.querySelector(".oneoff-confirm-btn").addEventListener("click", () => {
     const collapsed = !tr.classList.contains("is-oneoff-collapsed");
     setOneOffRowCollapsed(tr, collapsed);
+    triggerHaptic(collapsed ? 14 : 10);
     scheduleDraftSave();
   });
 
   tr.querySelector(".oneoff-name-cell").addEventListener("click", () => {
     if (!tr.classList.contains("is-oneoff-collapsed")) return;
     setOneOffRowCollapsed(tr, false);
+    triggerHaptic(8);
   });
 
   oneOffTableBody.appendChild(tr);
