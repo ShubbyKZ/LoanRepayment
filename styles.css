@@ -68,7 +68,7 @@ body {
   bottom: 0;
   z-index: 1250;
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 8px;
   padding: 8px max(12px, env(safe-area-inset-right)) calc(8px + env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
   background: rgba(248, 250, 252, 0.94);
@@ -82,6 +82,18 @@ body {
   margin: 0;
   border-radius: 12px;
   touch-action: manipulation;
+}
+
+#calculateNow {
+  width: 100%;
+  min-height: 48px;
+  background: #0f766e;
+  border-color: #0f766e;
+  color: #f0fdfa;
+}
+
+#calculateNow:hover {
+  background: #0d9488;
 }
 
 .bottom-tab.is-active {

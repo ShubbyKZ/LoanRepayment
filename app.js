@@ -268,8 +268,12 @@ const I18N = {
     cost_natural_gas: "Natural Gas",
     person_default: "Person 1",
     tab_planner: "Calculator",
+    tab_results: "Results",
     tab_scenarios: "Scenarios",
     tab_oneoff: "One-off",
+    calculate: "Calculate",
+    save_this_scenario: "Save This Scenario",
+    scenario_saved_opened: "Saved scenario: {name}. Opened Scenarios page for sharing.",
   },
   zh: {
     app_title: "新西兰房贷可负担性模型",
@@ -426,8 +430,12 @@ const I18N = {
     cost_natural_gas: "天然气",
     person_default: "成员 1",
     tab_planner: "计算",
+    tab_results: "结果",
     tab_scenarios: "情景",
     tab_oneoff: "一次性",
+    calculate: "计算",
+    save_this_scenario: "保存这个 Scenario",
+    scenario_saved_opened: "已保存 Scenario：{name}。已打开 Scenarios 页面可直接分享。",
   },
 };
 
@@ -493,6 +501,8 @@ const scenarioNote = document.getElementById("scenarioNote");
 
 const toggleDetailsBtn = document.getElementById("toggleDetails");
 const exportPngBtn = document.getElementById("exportPng");
+const calculateNowBtn = document.getElementById("calculateNow");
+const resultSaveScenarioBtn = document.getElementById("resultSaveScenario");
 const incomeBreakdownModal = document.getElementById("incomeBreakdownModal");
 const incomeBreakdownBody = document.getElementById("incomeBreakdownBody");
 const closeIncomeBreakdownBtn = document.getElementById("closeIncomeBreakdown");
@@ -512,6 +522,7 @@ const bottomTabButtons = [...document.querySelectorAll(".bottom-tab")];
 const VIEW_IDS = {
   home: "viewHome",
   planner: "viewPlanner",
+  results: "viewResults",
   scenarios: "viewScenarios",
   oneoff: "viewOneOff",
 };
@@ -637,8 +648,11 @@ function applyStaticTranslations() {
   setNodeText("#updateNowBtn", "update_now");
   setNodeText("#updateLaterBtn", "later");
   setNodeText(".bottom-tab[data-tab='planner']", "tab_planner");
+  setNodeText(".bottom-tab[data-tab='results']", "tab_results");
   setNodeText(".bottom-tab[data-tab='scenarios']", "tab_scenarios");
   setNodeText(".bottom-tab[data-tab='oneoff']", "tab_oneoff");
+  setNodeText("#calculateNow", "calculate");
+  setNodeText("#resultSaveScenario", "save_this_scenario");
   setNodeText("#incomeSection thead th:nth-child(1)", "th_person");
   setNodeText("#incomeSection thead th:nth-child(2)", "th_gross_salary");
   setNodeText("#incomeSection thead th:nth-child(3)", "th_kiwisaver");
@@ -790,7 +804,7 @@ function viewFromHash() {
 
 function navigateToView(view, options = {}) {
   const { updateHash = true } = options;
-  const targetView = Object.prototype.hasOwnProperty.call(VIEW_IDS, view) ? view : "home";
+  const targetView = Object.prototype.hasOwnProperty.call(VIEW_IDS, view) ? view : "planner";
 
   for (const node of appViews) {
     const isActive = node.dataset.view === targetView;
@@ -825,6 +839,21 @@ function initViewNavigation() {
     navigateToView(viewFromHash(), { updateHash: false });
   });
   navigateToView(viewFromHash(), { updateHash: false });
+}
+
+function saveCurrentScenario() {
+  const currentState = collectCurrentState();
+  if (currentState.housePrice <= 0) {
+    setScenarioNote(t("scenario_need_house_price"), true);
+    return "";
+  }
+
+  const name = scenarioNameFromHousePrice(currentState.housePrice);
+  const scenarios = readScenarioStore();
+  scenarios[name] = currentState;
+  writeScenarioStore(scenarios);
+  refreshScenarioSelect(name);
+  return name;
 }
 
 const SECTION_IDS = [
@@ -944,17 +973,8 @@ confirmCostsBtn.addEventListener("click", () => collapseSection("costsSection", 
 confirmOneOffBtn.addEventListener("click", () => collapseSection("oneOffSection", true));
 
 saveScenarioBtn.addEventListener("click", () => {
-  const currentState = collectCurrentState();
-  if (currentState.housePrice <= 0) {
-    setScenarioNote(t("scenario_need_house_price"), true);
-    return;
-  }
-  const name = scenarioNameFromHousePrice(currentState.housePrice);
-
-  const scenarios = readScenarioStore();
-  scenarios[name] = currentState;
-  writeScenarioStore(scenarios);
-  refreshScenarioSelect(name);
+  const name = saveCurrentScenario();
+  if (!name) return;
   setScenarioNote(t("scenario_saved", { name }));
 });
 
@@ -1028,6 +1048,19 @@ exportPngBtn.addEventListener("click", async () => {
   } else {
     setScenarioNote(t("exported_image"));
   }
+});
+
+calculateNowBtn.addEventListener("click", () => {
+  const ok = confirmSectionState();
+  if (!ok) return;
+  navigateToView("results");
+});
+
+resultSaveScenarioBtn.addEventListener("click", () => {
+  const name = saveCurrentScenario();
+  if (!name) return;
+  navigateToView("scenarios");
+  setScenarioNote(t("scenario_saved_opened", { name }));
 });
 
 document.addEventListener("input", (event) => {
@@ -1674,7 +1707,7 @@ function confirmSectionState() {
   if (errors.length > 0) {
     validationNote.className = "note status-warn";
     validationNote.textContent = `${t("validation_prefix")} ${errors.join(" ")}`;
-    return;
+    return false;
   }
 
   validationNote.className = "note";
@@ -1683,6 +1716,7 @@ function confirmSectionState() {
   lastConfirmedState = state;
   renderFromState(state, { skipValidation: true });
   saveDraftState(state);
+  return true;
 }
 
 function estimateAverageRecurringCosts(housePrice, occupantCount, hasGasConnection) {

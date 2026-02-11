@@ -198,7 +198,21 @@
           </div>
           <button type="button" id="confirmCosts">Confirm Costs</button>
         </section>
+        <section class="card calc-cta-card">
+          <button type="button" id="calculateNow">Calculate</button>
+        </section>
 
+        <section class="card small section-card section-assumptions" id="assumptionsSection">
+          <h2>Assumptions</h2>
+          <ul>
+            <li>NZ income tax brackets from 1 April 2025.</li>
+            <li>ACC earners levy set to 1.67% capped at NZD 152,790 earnings.</li>
+            <li>This is a planning tool, not financial advice.</li>
+          </ul>
+        </section>
+      </section>
+
+      <section class="app-view" id="viewResults" data-view="results" hidden>
         <section class="card section-card section-results" id="resultsSection">
           <div class="row-between result-head">
             <h2>Results</h2>
@@ -211,21 +225,13 @@
           <div class="row-wrap result-tools">
             <button type="button" id="toggleDetails">Show Details</button>
             <button type="button" id="exportPng">Share / Export Image</button>
+            <button type="button" id="resultSaveScenario">Save This Scenario</button>
           </div>
           <div class="results" id="results"></div>
           <div class="sensitivity" id="sensitivityPanel"></div>
           <p class="note" id="statusNote"></p>
           <p class="note" id="riskNote"></p>
           <p class="note" id="validationNote"></p>
-        </section>
-
-        <section class="card small section-card section-assumptions" id="assumptionsSection">
-          <h2>Assumptions</h2>
-          <ul>
-            <li>NZ income tax brackets from 1 April 2025.</li>
-            <li>ACC earners levy set to 1.67% capped at NZD 152,790 earnings.</li>
-            <li>This is a planning tool, not financial advice.</li>
-          </ul>
         </section>
       </section>
 
@@ -299,6 +305,7 @@
 
     <nav class="bottom-tabs" id="bottomTabs" aria-label="Primary navigation">
       <button type="button" class="bottom-tab" data-nav-target="planner" data-tab="planner">Calculator</button>
+      <button type="button" class="bottom-tab" data-nav-target="results" data-tab="results">Results</button>
       <button type="button" class="bottom-tab" data-nav-target="scenarios" data-tab="scenarios">Scenarios</button>
       <button type="button" class="bottom-tab" data-nav-target="oneoff" data-tab="oneoff">One-off</button>
     </nav>
