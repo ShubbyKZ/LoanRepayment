@@ -423,6 +423,14 @@ thead th {
   gap: 12px;
 }
 
+#incomeSection .table-actions button {
+  min-width: 92px;
+}
+
+#incomeSection .table-actions button + button {
+  margin-left: 8px;
+}
+
 #costsSection .table-actions,
 #oneOffSection .table-actions {
   gap: 14px;
@@ -763,6 +771,11 @@ thead th {
   #incomeSection .entry-table .table-actions {
     gap: 10px;
     margin-top: 4px;
+  }
+
+  #incomeSection .entry-table .table-actions button + button {
+    margin-left: 0;
+    margin-top: 10px;
   }
 
   #costsSection .entry-table .table-actions,
